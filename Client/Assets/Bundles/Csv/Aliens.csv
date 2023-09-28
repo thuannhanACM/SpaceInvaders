@@ -1,0 +1,3 @@
+ID,SkinPath,MoveSpeed,Radius,Point
+1,Assets/Bundles/Prefabs/Aliens/Alien1.prefab,5,1,2
+2,Assets/Bundles/Prefabs/Aliens/Alien2.prefab,5,1,3
