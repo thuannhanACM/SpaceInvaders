@@ -43,3 +43,4 @@
 
 # Localization use Unity Localization
 - string content can be add/modify in tool bar "Window/Asset ManageMent/Localization Tables"
+- can only change languages in Unity Editor Play Mode for now.
