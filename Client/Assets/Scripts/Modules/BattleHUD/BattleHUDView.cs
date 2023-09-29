@@ -1,4 +1,5 @@
-﻿using TMPro;
+﻿using Game.Gameplay;
+using TMPro;
 using UnityEngine;
 using UnityEngine.UI;
 using Zenject;
@@ -12,6 +13,7 @@ namespace Core.Framework
         #region Injection
         private ILogger _logger;
         private SignalBus _signalBus;
+        private LocalizationManager _localizationManager;
         #endregion
 
         #region SerializeField
@@ -28,10 +30,12 @@ namespace Core.Framework
         [Inject]
         public void Construct(
             ILogger logger,
-            SignalBus signal)
+            SignalBus signal,
+            LocalizationManager localizationManager)
         {
             _logger = logger;
             _signalBus = signal;
+            _localizationManager = localizationManager;
         }
         public override void OnReady()
         {
@@ -56,10 +60,7 @@ namespace Core.Framework
         private void Update()
         {
             if (_gameStart)
-            {
-                foreach (var txt in _scoreTxts)
-                    txt.text = $"SCORE: {Module.Model.Score}";
-            }
+                SetScoreValue();
         }
 
         private void OnBattleAction(BattleSignal data)
@@ -69,15 +70,24 @@ namespace Core.Framework
                 case BattleAction.StartBattle:
                     _gameStart = true;
                     break;
-                case BattleAction.GameOver: 
+                case BattleAction.GameOver:
                     _gameStart = false;
                     _gameoverPanel.SetActive(true);
-                    foreach (var txt in _scoreTxts)
-                        txt.text = $"SCORE: {Module.Model.Score}";
-                    string msg = (data.Data.CompareTo("WIN") == 0) ? "YOU WIN" : "YOU LOSE";
+                    SetScoreValue();
+
+                    LOCALIZE_KEY key = (data.Data.CompareTo("WIN") == 0) ? LOCALIZE_KEY.you_win : LOCALIZE_KEY.you_lose;
+                    string msg = _localizationManager.GetLocalText(key);
                     _gameOverMsgTxt.text = msg;
                     break;
             }
+        }
+
+        private void SetScoreValue()
+        {
+            string formating = _localizationManager.GetLocalText(LOCALIZE_KEY.score);
+            string scoretxt = string.Format(formating, Module.Model.Score);
+            foreach (var txt in _scoreTxts)
+                txt.text = scoretxt;
         }
     }
      

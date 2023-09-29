@@ -1,0 +1,52 @@
+%YAML 1.1
+%TAG !u! tag:unity3d.com,2011:
+--- !u!114 &11400000
+MonoBehaviour:
+  m_ObjectHideFlags: 0
+  m_CorrespondingSourceObject: {fileID: 0}
+  m_PrefabInstance: {fileID: 0}
+  m_PrefabAsset: {fileID: 0}
+  m_GameObject: {fileID: 0}
+  m_Enabled: 1
+  m_EditorHideFlags: 0
+  m_Script: {fileID: 11500000, guid: 5b11a58205ec3474ca216360e9fa74a8, type: 3}
+  m_Name: StringLocalizationTables Shared Data
+  m_EditorClassIdentifier: 
+  m_TableCollectionName: StringLocalizationTables
+  m_TableCollectionNameGuidString: 3819e9d615edf0844a2a7fc87c4b82ef
+  m_Entries:
+  - m_Id: 12463194112
+    m_Key: game_over
+    m_Metadata:
+      m_Items: []
+  - m_Id: 201999597568
+    m_Key: you_win
+    m_Metadata:
+      m_Items: []
+  - m_Id: 292823056384
+    m_Key: you_lose
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7625577938944
+    m_Key: score
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7761058152448
+    m_Key: start
+    m_Metadata:
+      m_Items: []
+  - m_Id: 7848916238336
+    m_Key: touch_to_replay
+    m_Metadata:
+      m_Items: []
+  m_Metadata:
+    m_Items: []
+  m_KeyGenerator:
+    rid: 9192157562315210776
+  references:
+    version: 2
+    RefIds:
+    - rid: 9192157562315210776
+      type: {class: DistributedUIDGenerator, ns: UnityEngine.Localization.Tables, asm: Unity.Localization}
+      data:
+        m_CustomEpoch: 1695960041689

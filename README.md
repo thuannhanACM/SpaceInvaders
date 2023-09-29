@@ -8,7 +8,6 @@
 # Lose condition:
 - an invader reach the bottom edge of the screen.
 
-
 # Addressable:
 - resources stores in Assets/Bundles/...
 - support hotfix by rebuild ad redistribute adreessable
@@ -41,3 +40,6 @@
 - currently aliens will be spawn randomly at the start of battle.
 - currently aliens have a simple behaviour so only supporting skins variations for now. 
 
+
+# Localization use Unity Localization
+- string content can be add/modify in tool bar "Window/Asset ManageMent/Localization Tables"
