@@ -60,12 +60,17 @@ public class AlienModel : BasePoolObj
         _battleController = battleController;
 
         ModelObj.transform.position = initPos;
-        ModelObj.GetComponent<AlienController>().Model = this;
+        var controller = ModelObj.GetComponent<AlienController>();
+        controller.AssignControllers(_battleController, this);
+        UpdateMoveDir();
+
     }
 
     public override UniTask Reinitialize()
     {
+        IsGameStart = false;
         IsAlive = true;
+        _moveState = MoveState.Right;
         return UniTask.CompletedTask;
     }
 
@@ -75,7 +80,7 @@ public class AlienModel : BasePoolObj
         {
             _lastHorizontalMove = _moveState;
             _moveState = MoveState.Down;
-            MoveDownDuration = 0.5f;
+            MoveDownDuration = 0.25f;
         }
         else
         {
@@ -89,6 +94,11 @@ public class AlienModel : BasePoolObj
             }
         }
 
+        UpdateMoveDir();
+    }
+
+    private void UpdateMoveDir()
+    {
         switch (_moveState)
         {
             case MoveState.Left:
@@ -119,7 +129,7 @@ public class AlienModel : BasePoolObj
                 IsGameStart = false;
                 break;
             case BattleAction.EnemyHit:
-                if (data == InstanceId.ToString())
+                if (IsAlive && data == InstanceId.ToString())
                 {
                     IsAlive = false;
                 }
@@ -149,6 +159,6 @@ public class AlienModel : BasePoolObj
     public void CheckIfAlienReachBottomEdge()
     {
         if (_battleController.IsReachingBottomBoundary(transform.position, _alienDef.Radius))
-            _signalBus.Fire<BattleSignal>(new BattleSignal(BattleAction.GameOver));
+            _signalBus.Fire<BattleSignal>(new BattleSignal(BattleAction.GameOver, "LOSE"));
     }
 }

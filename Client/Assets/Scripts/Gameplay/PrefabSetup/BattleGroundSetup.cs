@@ -10,5 +10,6 @@ namespace Game.Gameplay
         public Vector2 NumAlientPerLine;
         public float AlienHeight;
         public float AlienWidth;
+        public float AlientStartPosY;
     }
 }

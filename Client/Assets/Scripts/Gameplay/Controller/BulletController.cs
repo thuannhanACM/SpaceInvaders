@@ -26,10 +26,12 @@ public class BulletController : MonoBehaviour
         transform.position += Vector3.up * _model.MoveSpd * Time.deltaTime;
         if (!_model.IsAlive)
             return;
+        
         if (_model.IsOutOfScreen())
         {
             _model.IsAlive = false;
             _model.OutOScreen();
+            return;
         }
 
         var colliders = Physics.OverlapSphere(transform.position, _model.Radius, _alienLayerMask);
@@ -40,8 +42,8 @@ public class BulletController : MonoBehaviour
                 AlienController controller = collider.GetComponent<AlienController>();
                 if (controller.IsAlive)
                 { 
-                    _model.HitEnemy(controller.InstanceId);
                     _model.IsAlive = false;
+                    _model.HitEnemy(controller.InstanceId);
                     break;
                 }
             }

@@ -87,7 +87,6 @@
     <Compile Include="Assets\Scripts\Utilities\Joystick\TouchJoystick.cs" />
     <Compile Include="Assets\Scripts\Infrastructure\Extensions\CollectionExtensions.cs" />
     <Compile Include="Assets\Scripts\Business\GameDefinitions\ConfigFileName.cs" />
-    <Compile Include="Assets\Scripts\Modules\Game\GameStore.Navigation.cs" />
     <Compile Include="Assets\Scripts\Utilities\TableConfig\API\IConfigTableLoader.cs" />
     <Compile Include="Assets\Scripts\Utilities\GetEnumToString.cs" />
     <Compile Include="Assets\Scripts\Utilities\LayoutGroupHelper.cs" />
@@ -116,6 +115,7 @@
     <Compile Include="Assets\Scripts\Utilities\HoldButton.cs" />
     <Compile Include="Assets\Scripts\Utilities\Extensions\GameObjectExtension.cs" />
     <Compile Include="Assets\Scripts\Utilities\Pool\TickablePoolObject.cs" />
+    <Compile Include="Assets\Scripts\Gameplay\Controller\AlienGroupsController.cs" />
     <Compile Include="Assets\Scripts\BaseModule\View\Unity\ViewFactory.cs" />
     <Compile Include="Assets\Scripts\Utilities\BundleLoader\IBundleLoader.cs" />
     <Compile Include="Assets\Scripts\Utilities\File\FileUtil.cs" />
@@ -196,6 +196,7 @@
     <None Include="Assets\JMO Assets\Cartoon FX Remaster\CFXR Assets\Shaders\CFXR.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMPro_Mobile.cginc" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF SSD.shader" />
+    <None Include="Assets\AddressableAssetsData\link.xml" />
     <None Include="Assets\JMO Assets\Cartoon FX Easy Editor\CartoonFX Easy Editor Readme.txt" />
     <None Include="Assets\Scripts\link.xml" />
     <None Include="Assets\TextMesh Pro\Shaders\TMP_SDF-Surface-Mobile.shader" />

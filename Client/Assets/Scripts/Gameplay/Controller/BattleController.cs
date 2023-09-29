@@ -38,19 +38,20 @@ namespace Game.Gameplay
         private ShipDefinition[] _shipDefinitions;
         private BulletDefinition[] _bulletDefinitions;
         private AlienDefinition[] _alienDefinitions;
-        private IModuleContextModel _battleHudModel;
+        private BattleHUDModel _battleHudModel;
         private ShipController _shipController;
-        private List<AlienModel> _alienControllers = new List<AlienModel>();
+        private List<AlienModel> _alienObjects = new List<AlienModel>();
         private List<int> _despawningInstanceIds = new List<int>();
 
         private bool _gameStart = false;
+        private float _lastTickTime;
+        private float _alienSpeedBooster = 1f;
         #endregion
 
         #region Properties
-        public List<AlienModel> AlienControllers => _alienControllers;
+        public List<AlienModel> AlienControllers => _alienObjects;
+        public float AlienSpeedBooster => _alienSpeedBooster;
         #endregion
-
-        private float _lastTickTime;
 
         public async UniTask Init()
         {
@@ -59,10 +60,10 @@ namespace Game.Gameplay
 
             CalculateGameBoundaries();
             await LoadAllDefinitions();
-
             await PrepareBattle();
-
-            _gameStore.GState.TryGetModel(ModuleName.BattleHUD, out _battleHudModel);
+            IModuleContextModel model;
+            _gameStore.GState.TryGetModel(ModuleName.BattleHUD, out model);
+            _battleHudModel = model as BattleHUDModel;
         }
 
         private async UniTask PrepareBattle()
@@ -105,20 +106,18 @@ namespace Game.Gameplay
 
         private async UniTask SpawnAliens()
         {
-            _alienControllers = new List<AlienModel>();
-            int numAlienPerLine = Random.Range((int)_battleGroundSetup.NumAlientPerLine.x, (int)_battleGroundSetup.NumAlientPerLine.y + 1);
+            _alienObjects = new List<AlienModel>();
             int numAlienLine = Random.Range((int)_battleGroundSetup.NumAlientLine.x, (int)_battleGroundSetup.NumAlientLine.y + 1);
-
-            float alientHeight = 2f;
             for (int i = 0; i < numAlienLine; i++)
             {
-                await SpawnAlienLine(alientHeight * i, numAlienPerLine);
+                int numAlienPerLine = Random.Range((int)_battleGroundSetup.NumAlientPerLine.x, (int)_battleGroundSetup.NumAlientPerLine.y + 1);
+                await SpawnAlienLine(_battleGroundSetup.AlientStartPosY + _battleGroundSetup.AlienHeight * i, numAlienPerLine);
             }
         }
 
         private async UniTask SpawnAlienLine(float linePosY, int numAlien)
         {
-            float alienWidth = 2f;
+            float alienWidth = _battleGroundSetup.AlienWidth;
             float totalAlienSpaces = alienWidth * numAlien;
             float startPosX = -totalAlienSpaces / 2;
             for (int i = 0; i < numAlien; i++)
@@ -127,8 +126,8 @@ namespace Game.Gameplay
                 var alienDef = _alienDefinitions[randomIdx];
                 AlienModel alienController = await _poolManager.GetObject<AlienModel>(alienDef.SkinPath);
                 Vector3 pos = new Vector3(startPosX + i * alienWidth, linePosY, 0);
-                alienController.Init(_alienControllers.Count, alienDef, this, pos);
-                _alienControllers.Add(alienController);
+                alienController.Init(_alienObjects.Count, alienDef, this, pos);
+                _alienObjects.Add(alienController);
             }
         }
 
@@ -156,7 +155,9 @@ namespace Game.Gameplay
                     HandleGameOver();
                     break;
                 case BattleAction.EnemyHit:
-                    _despawningInstanceIds.Add(int.Parse(data));
+                    int id = int.Parse(data);
+                    if (!_despawningInstanceIds.Contains(id))
+                        _despawningInstanceIds.Add(id);
                     break;
             }
         }
@@ -168,14 +169,21 @@ namespace Game.Gameplay
 
         private async void HandleRestartBattle()
         {
-            _shipController.SelfDespawn();
-            foreach (var alien in _alienControllers) {
-                alien.SelfDespawn();
-            }
-            (_battleHudModel as BattleHUDModel).Score = 0;
+            CleanUpLastControllers();
             await PrepareBattle();
         }
-        
+
+        private void CleanUpLastControllers()
+        {
+            _shipController.SelfDespawn();
+            _alienSpeedBooster = 1;
+            foreach (var alien in _alienObjects)
+            {
+                alien.SelfDespawn();
+            }
+            _battleHudModel.Score = 0;
+        }
+
         private void HandleGameOver()
         {
             _gameStart = false;
@@ -224,18 +232,21 @@ namespace Game.Gameplay
 
         private void UpdateAliens(float dt)
         {
+            _alienSpeedBooster += dt / 10f;
             foreach (var instanceId in _despawningInstanceIds)
             {
-                var controller = _alienControllers.Find(_ => _.InstanceId == instanceId);
-                _alienControllers.Remove(controller);
+                var controller = _alienObjects.Find(_ => _.InstanceId == instanceId);
+                if (controller == null)
+                    continue;
+                _alienObjects.Remove(controller);
                 if (_battleHudModel != null)
-                    (_battleHudModel as BattleHUDModel).Score += controller.KillPoint;
+                    _battleHudModel.Score += controller.KillPoint;
                 controller.SelfDespawn();
             }
             _despawningInstanceIds.Clear();
 
-            if (_alienControllers.Count <= 0)
-                _signalBus.Fire<BattleSignal>(new BattleSignal(BattleAction.GameOver));
+            if (_alienObjects.Count <= 0)
+                _signalBus.Fire<BattleSignal>(new BattleSignal(BattleAction.GameOver, "WIN"));
         }
     }
 };

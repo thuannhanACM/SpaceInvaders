@@ -20,6 +20,7 @@ namespace Core.Framework
         [SerializeField] private GameObject _gameoverPanel; 
         [SerializeField] private Button _restartBtn;
         [SerializeField] private TMP_Text[] _scoreTxts;
+        [SerializeField] private TMP_Text _gameOverMsgTxt;
         #endregion
 
         private bool _gameStart = false;
@@ -73,6 +74,8 @@ namespace Core.Framework
                     _gameoverPanel.SetActive(true);
                     foreach (var txt in _scoreTxts)
                         txt.text = $"SCORE: {Module.Model.Score}";
+                    string msg = (data.Data.CompareTo("WIN") == 0) ? "YOU WIN" : "YOU LOSE";
+                    _gameOverMsgTxt.text = msg;
                     break;
             }
         }

@@ -46,6 +46,7 @@ public class BulletModel : BasePoolObj
 
     public async void OutOScreen()
     {
+
         await UniTask.Delay(1000);
         SelfDespawn();
     }

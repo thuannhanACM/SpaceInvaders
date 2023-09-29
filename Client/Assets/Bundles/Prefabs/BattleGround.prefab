@@ -81,10 +81,11 @@ MonoBehaviour:
   m_EditorClassIdentifier: 
   Camera: {fileID: 6150155388717226812}
   PlayerStartTF: {fileID: 1664067063071450573}
-  NumAlientLine: {x: 1, y: 2}
+  NumAlientLine: {x: 3, y: 5}
   NumAlientPerLine: {x: 6, y: 10}
   AlienHeight: 2
   AlienWidth: 2
+  AlientStartPosY: 10
 --- !u!1 &983161540238374533
 GameObject:
   m_ObjectHideFlags: 0
